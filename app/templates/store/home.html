@@ -1,0 +1,542 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Anita New Style - Moda para toda la familia{% endblock %}
+
+{% block content %}
+
+<!-- ============================
+     HERO / BANNER PRINCIPAL
+============================ -->
+<section class="hero-section">
+    <div class="hero-slider">
+
+        <!-- Slide 1 -->
+        <div class="hero-slide active" style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 50%, #fce4ec 100%);">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-lg-6">
+                        <p class="hero-tag">Nueva colección 2026</p>
+                        <h1 class="hero-titulo">Moda que te hace <span>brillar</span></h1>
+                        <p class="hero-subtitulo">Descubre las últimas tendencias en ropa, calzado y accesorios para dama, varón e infantil.</p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            <a href="{{ url_for('store.catalogo') }}" class="btn-rosa px-4 py-3">
+                                <i class="bi bi-bag me-2"></i>Ver colección
+                            </a>
+                            <a href="{{ url_for('store.promociones') }}" class="btn-outline-rosa px-4 py-3">
+                                <i class="bi bi-tag me-2"></i>Ver ofertas
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 d-none d-lg-flex justify-content-center">
+                        <div class="hero-imagen-placeholder">
+                            <i class="bi bi-bag-heart" style="font-size:8rem; color:var(--rosa); opacity:0.3;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2 -->
+        <div class="hero-slide" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 50%, #e8f5e9 100%);">
+            <div class="container h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-lg-6">
+                        <p class="hero-tag">Ofertas especiales</p>
+                        <h1 class="hero-titulo">Hasta <span>50% OFF</span> en productos seleccionados</h1>
+                        <p class="hero-subtitulo">Aprovecha nuestras promociones de temporada. Solo por tiempo limitado.</p>
+                        <a href="{{ url_for('store.promociones') }}" class="btn-rosa px-4 py-3">
+                            <i class="bi bi-lightning me-2"></i>Ver promociones
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Controles slider -->
+    <button class="hero-prev" onclick="cambiarSlide(-1)"><i class="bi bi-chevron-left"></i></button>
+    <button class="hero-next" onclick="cambiarSlide(1)"><i class="bi bi-chevron-right"></i></button>
+
+    <!-- Dots -->
+    <div class="hero-dots">
+        <span class="dot activo" onclick="irSlide(0)"></span>
+        <span class="dot" onclick="irSlide(1)"></span>
+    </div>
+</section>
+
+<!-- ============================
+     CATEGORÍAS
+============================ -->
+<section class="py-5">
+    <div class="container">
+        <div class="seccion-titulo">
+            <h2>Explorar por categoría</h2>
+            <div class="linea"></div>
+            <p>Encuentra exactamente lo que buscas</p>
+        </div>
+        <div class="row g-3 justify-content-center">
+            {% for cat in categorias %}
+            <div class="col-6 col-md-4 col-lg-2">
+                <a href="{{ url_for('store.categoria', slug=cat.slug) }}" class="card-categoria">
+                    <div class="cat-icono">
+                        {% if cat.slug == 'calzados' %}
+                            <i class="bi bi-boot"></i>
+                        {% elif cat.slug == 'vestidos' %}
+                            <i class="bi bi-person-dress"></i>
+                        {% elif cat.slug == 'mochilas' %}
+                            <i class="bi bi-backpack"></i>
+                        {% elif cat.slug == 'carteras' %}
+                            <i class="bi bi-handbag"></i>
+                        {% elif cat.slug == 'accesorios' %}
+                            <i class="bi bi-gem"></i>
+                        {% else %}
+                            <i class="bi bi-tag"></i>
+                        {% endif %}
+                    </div>
+                    <p class="cat-nombre">{{ cat.nombre }}</p>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ============================
+     BANNER GÉNEROS
+============================ -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <a href="{{ url_for('store.catalogo') }}?genero=dama" class="banner-genero" style="background: linear-gradient(135deg, #fce4ec, #f48fb1);">
+                    <i class="bi bi-person-dress fs-1 mb-2"></i>
+                    <h4>Dama</h4>
+                    <p>Ver colección</p>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{{ url_for('store.catalogo') }}?genero=varón" class="banner-genero" style="background: linear-gradient(135deg, #e3f2fd, #90caf9);">
+                    <i class="bi bi-person fs-1 mb-2"></i>
+                    <h4>Varón</h4>
+                    <p>Ver colección</p>
+                </a>
+            </div>
+            <div class="col-md-4">
+                <a href="{{ url_for('store.catalogo') }}?genero=infantil" class="banner-genero" style="background: linear-gradient(135deg, #f3e5f5, #ce93d8);">
+                    <i class="bi bi-people fs-1 mb-2"></i>
+                    <h4>Infantil</h4>
+                    <p>Ver colección</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================
+     PROMOCIONES VIGENTES
+============================ -->
+{% if promociones %}
+<section class="py-5" style="background: var(--negro);">
+    <div class="container">
+        <div class="seccion-titulo">
+            <h2 style="color:white;">Promociones activas</h2>
+            <div class="linea"></div>
+            <p style="color:#aaa;">Ofertas por tiempo limitado</p>
+        </div>
+        <div class="row g-4 justify-content-center">
+            {% for promo in promociones %}
+            <div class="col-md-4">
+                <div class="card-promo">
+                    <div class="promo-valor">
+                        {% if promo.tipo == 'porcentaje' %}
+                            {{ promo.valor|int }}% OFF
+                        {% else %}
+                            S/. {{ promo.valor }} OFF
+                        {% endif %}
+                    </div>
+                    <h5 class="promo-nombre">{{ promo.nombre }}</h5>
+                    <p class="promo-desc">{{ promo.descripcion }}</p>
+                    <div class="promo-fecha">
+                        <i class="bi bi-clock me-1"></i>
+                        Hasta el {{ promo.fecha_fin.strftime('%d/%m/%Y') }}
+                    </div>
+                    <a href="{{ url_for('store.promociones') }}" class="btn-outline-rosa mt-3 d-inline-block">
+                        Ver productos
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ============================
+     PRODUCTOS DESTACADOS
+============================ -->
+{% if destacados %}
+<section class="py-5">
+    <div class="container">
+        <div class="seccion-titulo">
+            <h2>Productos destacados</h2>
+            <div class="linea"></div>
+            <p>Los favoritos de nuestra colección</p>
+        </div>
+        <div class="row g-4">
+            {% for producto in destacados %}
+            <div class="col-6 col-md-4 col-lg-3">
+                {% include 'store/partials/card_producto.html' %}
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{{ url_for('store.catalogo') }}" class="btn-outline-rosa px-5 py-3">
+                Ver todos los productos <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ============================
+     NUEVOS PRODUCTOS
+============================ -->
+{% if nuevos %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="seccion-titulo">
+            <h2>Nuevos ingresos</h2>
+            <div class="linea"></div>
+            <p>Lo último que llegó a nuestra tienda</p>
+        </div>
+        <div class="row g-4">
+            {% for producto in nuevos %}
+            <div class="col-6 col-md-4 col-lg-3">
+                {% include 'store/partials/card_producto.html' %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- ============================
+     BENEFICIOS
+============================ -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-md-3">
+                <div class="beneficio">
+                    <i class="bi bi-truck"></i>
+                    <h6>Envío rápido</h6>
+                    <p>Entrega en 24-48 horas a todo el Perú</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="beneficio">
+                    <i class="bi bi-shield-check"></i>
+                    <h6>Compra segura</h6>
+                    <p>Tus datos y pagos están protegidos</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="beneficio">
+                    <i class="bi bi-arrow-return-left"></i>
+                    <h6>Devoluciones</h6>
+                    <p>30 días para cambios y devoluciones</p>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="beneficio">
+                    <i class="bi bi-headset"></i>
+                    <h6>Soporte 24/7</h6>
+                    <p>Estamos disponibles para ayudarte</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+
+{% block styles %}
+<style>
+    /* ============================
+       HERO
+    ============================ */
+    .hero-section {
+        position: relative;
+        height: 520px;
+        overflow: hidden;
+    }
+
+    .hero-slider { height: 100%; }
+
+    .hero-slide {
+        display: none;
+        height: 100%;
+        padding: 40px 0;
+    }
+
+    .hero-slide.active { display: block; }
+
+    .hero-tag {
+        background: var(--rosa);
+        color: white;
+        display: inline-block;
+        padding: 5px 18px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        margin-bottom: 15px;
+        letter-spacing: 0.5px;
+    }
+
+    .hero-titulo {
+        font-size: 2.8rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 15px;
+        color: var(--negro);
+    }
+
+    .hero-titulo span { color: var(--rosa); }
+
+    .hero-subtitulo {
+        font-size: 1rem;
+        color: var(--gris);
+        margin-bottom: 30px;
+        max-width: 450px;
+    }
+
+    .hero-imagen-placeholder {
+        width: 300px;
+        height: 300px;
+        background: rgba(233,30,140,0.05);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-prev, .hero-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        border: none;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        cursor: pointer;
+        font-size: 1.1rem;
+        color: var(--negro);
+        transition: all 0.3s;
+        z-index: 10;
+    }
+
+    .hero-prev { left: 20px; }
+    .hero-next { right: 20px; }
+    .hero-prev:hover, .hero-next:hover { background: var(--rosa); color: white; }
+
+    .hero-dots {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 8px;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(233,30,140,0.3);
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .dot.activo { background: var(--rosa); }
+
+    /* ============================
+       CATEGORÍAS
+    ============================ */
+    .card-categoria {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 10px;
+        border-radius: 15px;
+        border: 2px solid #f0f0f0;
+        transition: all 0.3s;
+        text-align: center;
+        color: var(--negro);
+    }
+
+    .card-categoria:hover {
+        border-color: var(--rosa);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(233,30,140,0.1);
+    }
+
+    .cat-icono {
+        width: 60px;
+        height: 60px;
+        background: #fce4ec;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--rosa);
+        margin-bottom: 10px;
+        transition: all 0.3s;
+    }
+
+    .card-categoria:hover .cat-icono {
+        background: var(--rosa);
+        color: white;
+    }
+
+    .cat-nombre {
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    /* ============================
+       BANNER GÉNEROS
+    ============================ */
+    .banner-genero {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px;
+        border-radius: 15px;
+        text-align: center;
+        color: var(--negro);
+        transition: all 0.3s;
+        min-height: 180px;
+    }
+
+    .banner-genero:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .banner-genero h4 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .banner-genero p {
+        font-size: 0.85rem;
+        color: var(--gris);
+        margin: 0;
+        text-decoration: underline;
+    }
+
+    /* ============================
+       PROMOCIONES
+    ============================ */
+    .card-promo {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 15px;
+        padding: 30px;
+        text-align: center;
+        color: white;
+        transition: all 0.3s;
+    }
+
+    .card-promo:hover {
+        background: rgba(255,255,255,0.08);
+        transform: translateY(-5px);
+    }
+
+    .promo-valor {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--rosa);
+        font-family: 'Playfair Display', serif;
+        margin-bottom: 10px;
+    }
+
+    .promo-nombre {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .promo-desc {
+        font-size: 0.85rem;
+        color: #aaa;
+        margin-bottom: 10px;
+    }
+
+    .promo-fecha {
+        font-size: 0.8rem;
+        color: #888;
+    }
+
+    /* ============================
+       BENEFICIOS
+    ============================ */
+    .beneficio i {
+        font-size: 2rem;
+        color: var(--rosa);
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .beneficio h6 {
+        font-weight: 700;
+        margin-bottom: 6px;
+        font-size: 0.95rem;
+    }
+
+    .beneficio p {
+        font-size: 0.82rem;
+        color: var(--gris);
+        margin: 0;
+    }
+
+    /* ============================
+       RESPONSIVE
+    ============================ */
+    @media (max-width: 768px) {
+        .hero-titulo { font-size: 1.8rem; }
+        .hero-section { height: 420px; }
+    }
+</style>
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+    let slideActual = 0;
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots   = document.querySelectorAll('.dot');
+
+    function mostrarSlide(n) {
+        slides.forEach(s => s.classList.remove('active'));
+        dots.forEach(d => d.classList.remove('activo'));
+        slideActual = (n + slides.length) % slides.length;
+        slides[slideActual].classList.add('active');
+        dots[slideActual].classList.add('activo');
+    }
+
+    function cambiarSlide(dir) { mostrarSlide(slideActual + dir); }
+    function irSlide(n) { mostrarSlide(n); }
+
+    // Auto slide cada 5 segundos
+    setInterval(() => cambiarSlide(1), 5000);
+</script>
+{% endblock %}

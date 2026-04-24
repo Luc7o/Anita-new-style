@@ -1,0 +1,57 @@
+<div class="card-producto h-100">
+    <a href="{{ url_for('store.detalle_producto', slug=producto.slug) }}">
+        <div class="img-wrapper">
+            {% if producto.imagen_principal %}
+                <img src="{{ producto.imagen_principal }}" alt="{{ producto.nombre }}" loading="lazy">
+            {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100">
+                    <i class="bi bi-image text-muted" style="font-size:3rem;"></i>
+                </div>
+            {% endif %}
+
+            {% if producto.precio_original and producto.precio_original > producto.precio %}
+                <span class="badge-descuento">
+                    -{{ ((producto.precio_original - producto.precio) / producto.precio_original * 100)|int }}%
+                </span>
+            {% endif %}
+
+            <div class="overlay-acciones">
+                <button class="btn-wishlist" title="Agregar a favoritos">
+                    <i class="bi bi-heart"></i>
+                </button>
+                <a href="{{ url_for('store.detalle_producto', slug=producto.slug) }}" class="btn-rosa px-3 py-2" style="font-size:0.8rem;">
+                    <i class="bi bi-eye me-1"></i>Ver
+                </a>
+                <button class="btn-wishlist" title="Agregar al carrito">
+                    <i class="bi bi-bag-plus"></i>
+                </button>
+            </div>
+        </div>
+    </a>
+    <div class="card-body">
+        <p class="categoria-tag">{{ producto.categoria.nombre }}</p>
+        <a href="{{ url_for('store.detalle_producto', slug=producto.slug) }}">
+            <p class="nombre-producto">{{ producto.nombre }}</p>
+        </a>
+        <div class="d-flex align-items-center">
+            <span class="precio-actual">S/. {{ "%.2f"|format(producto.precio) }}</span>
+            {% if producto.precio_original and producto.precio_original > producto.precio %}
+                <span class="precio-original">S/. {{ "%.2f"|format(producto.precio_original) }}</span>
+            {% endif %}
+        </div>
+        {% if not producto.tiene_stock() %}
+            <span class="badge bg-secondary mt-1" style="font-size:0.7rem;">Agotado</span>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.categoria-tag {
+    font-size: 0.75rem;
+    color: var(--rosa);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+</style>
